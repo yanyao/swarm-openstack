@@ -8,20 +8,22 @@ services:
     networks:
       - mgmt
     command: [ "server" ]
+    environment:
+      INIT_DB: "true"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9696/"]
       interval: 1m 
       timeout: 10s
       retries: 3
 
-    secrets:
-      - source: neutron_conf
-        target: /etc/neutron/neutron.conf
-      - source: neutron_plugins_ml2_ml2_conf
-        target: /etc/neutron/plugins/ml2/ml2_conf.ini
-      - source: neutron_init
-        target: /init.sh
-        mode: 0555
+#    secrets:
+#      - source: neutron_conf
+##        target: /etc/neutron/neutron.conf
+#      - source: neutron_plugins_ml2_ml2_conf
+#        target: /etc/neutron/plugins/ml2/ml2_conf.ini
+#      - source: neutron_init
+#        target: /init.sh
+#        mode: 0555
 
 
     deploy:

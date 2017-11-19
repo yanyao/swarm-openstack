@@ -1,0 +1,39 @@
+version: "3.3"
+
+services:
+  neutron-linuxbridge-agent:
+    image: neutron:ubuntu
+    command: [ "linuxbridge-agent" ]
+    privileged: true
+    network_mode: host
+    restart: always
+
+  neutron-dhcp-agent:
+    image: neutron:ubuntu
+    command: [ "dhcp-agent" ]
+    privileged: true
+    network_mode: host
+    restart: always
+   
+  neutron-l3-agent:
+    image: neutron:ubuntu
+    command: [ "l3-agent" ]
+    privileged: true
+    network_mode: host
+    restart: always
+   
+  neutron-metadata-agent:
+    image: neutron:ubuntu
+    command: [ "metadata-agent" ]
+    privileged: true
+    network_mode: host
+    restart: always
+
+  neutron-metering-agent:
+    image: neutron:ubuntu
+    command: [ "metering-agent" ]
+    privileged: true
+    network_mode: host
+    restart: always
+
+

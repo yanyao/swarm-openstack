@@ -31,14 +31,14 @@ services:
   rabbitmq:
     image: rabbitmq
     ports:
-      - 5671:5672
+      - 5672:5672
     volumes:
       - rabbitmq_vol:/var/lib/rabbitmq
     networks:
       - mgmt
     environment:
       - RABBITMQ_NODENAME=node@rabbitmq
-    secrets:
+    configs:
       - source: rabbitmq_init
         target: /rabbitmq_init.sh
 
@@ -47,7 +47,7 @@ services:
       replicas: 1
       endpoint_mode: vip
 
-secrets:
+configs:
   rabbitmq_init:
     file: ./rabbitmq_init.sh
 

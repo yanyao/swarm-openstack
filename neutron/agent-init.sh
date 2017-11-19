@@ -1,0 +1,40 @@
+#!/bin/bash
+
+PROC=$1
+
+FLAG=0
+for svc in server agent;do
+   if [[ $PROC == "$svc" ]];then
+      FLAG=1
+      break
+   fi
+done
+
+
+if [[ $FLAG -eq 0 ]];then
+    exit 12
+fi
+
+INIT_DB=${INIT_DB:-false}
+
+
+if [ "$INIT_DB" = "true" ]; then
+ /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf  --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
+fi
+
+pip install crudini
+
+
+if [[ $PROC == "server" ]];then
+  #/bin/sh -c "neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini --log-file=/var/log/neutron/neutron-server.log" neutron
+  neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini --log-file=/var/log/neutron/neutron-server.log
+else 
+  my_ip=`ip r|grep br-vxlan|awk '{print $9}'` 
+  echo $my_ip
+  crudini --set etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan "local_ip" "$my_ip"
+  crudini --set etc/neutron/plugins/ml2/linuxbridge_agent.ini linux_bridge "physical_interface_mappings" "vlan:br-vlan"
+  #neutron-linuxbridge-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini --config-file /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+  bash 
+fi
+
+

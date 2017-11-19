@@ -1,0 +1,36 @@
+version: "3.3"
+
+services:
+  keystone:
+    image: keystone:ubuntu
+    ports:
+      - 5000:5000
+      - 35357:35357
+    networks:
+      - mgmt
+
+    secrets:
+      - source: keystone-config
+        target: /etc/keystone/keystone.conf
+        uid: '42424'
+        gid: '42424'
+          
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/healthcheck"]
+      interval: 1m 
+      timeout: 10s
+      retries: 3
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+   
+
+networks:
+  mgmt:
+    external:
+      name: mgmt
+
+secrets:
+  keystone-config:
+    file: ./keystone.conf

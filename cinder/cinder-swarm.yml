@@ -1,0 +1,73 @@
+version: "3.3"
+
+services:
+  cinder-api:
+    image: cinder:ubuntu
+    ports:
+      - 8776:8776
+    networks:
+      - mgmt
+    command: [ "api" ]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8776/"]
+      interval: 1m 
+      timeout: 10s
+      retries: 3
+
+    secrets:
+      - source: cinder_config
+        target: /etc/cinder/cinder.conf
+
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+   
+  cinder-scheduler:
+    image: cinder:ubuntu
+    networks:
+      - mgmt
+    command: [ "scheduler" ]
+    environment:
+      - DB_INIT=false
+    secrets:
+      - source: cinder_config
+        target: /etc/cinder/cinder.conf
+
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+
+  cinder-volume:
+    image: cinder:ubuntu
+    networks:
+      - mgmt
+    command: [ "volume" ]
+    environment:
+      - DB_INIT=false
+    secrets:
+      - source: cinder_config
+        target: /etc/cinder/cinder.conf
+      - source: ceph_config
+        target: /etc/ceph/ceph.conf
+      - source: ceph_auth
+        target: /etc/ceph/ceph.client.openstack.keyring
+
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+
+secrets:
+  cinder_config:
+    file: ./cinder.conf
+  ceph_config:
+    file: ./ceph/ceph.conf
+  ceph_auth:
+    file: ./ceph/ceph.client.openstack.keyring
+
+networks:
+  mgmt:
+    external:
+      name: mgmt

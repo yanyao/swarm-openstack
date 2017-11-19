@@ -1,0 +1,60 @@
+version: "3.3"
+
+services:
+  glance-api:
+    image: glance:ubuntu
+    ports:
+      - 9292:9292
+    networks:
+      - mgmt
+    #command: [ "/init.sh" ]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9292/healthcheck"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+
+    secrets:
+      - source: glance_api_config
+        target: /etc/glance/glance-api.conf
+      - source: glance_manage_config
+        target: /etc/glance/glance-manage.conf
+      - source: ceph_config
+        target: /etc/ceph/ceph.conf
+      - source: ceph_auth
+        target: /etc/ceph/ceph.client.openstack.keyring
+
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+   
+#  keystone_sidestick:
+#    image: pause
+#    volumes:
+#      - uwsgi-keystone:/etc/uwsgi
+#      - etc-keystone:/etc/keystone
+#    command: sleep 3600
+#
+
+
+#volumes:
+#  uwsgi-keystone:
+#    external: true
+#  etc-keystone:
+#    external: true
+
+secrets:
+  glance_api_config:
+    file: ./glance-api.conf
+  glance_manage_config:
+    file: ./glance-manage.conf
+  ceph_config:
+    file: ./ceph/ceph.conf
+  ceph_auth:
+    file: ./ceph/ceph.client.openstack.keyring
+
+networks:
+  mgmt:
+    external:
+      name: mgmt

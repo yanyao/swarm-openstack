@@ -1,0 +1,43 @@
+version: "3.3"
+
+services:
+  neutron-server:
+    image: neutron:ubuntu
+    ports:
+      - 9696:9696
+    networks:
+      - mgmt
+    command: [ "server" ]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9696/"]
+      interval: 1m 
+      timeout: 10s
+      retries: 3
+
+    secrets:
+      - source: neutron_conf
+        target: /etc/neutron/neutron.conf
+      - source: neutron_plugins_ml2_ml2_conf
+        target: /etc/neutron/plugins/ml2/ml2_conf.ini
+      - source: neutron_init
+        target: /init.sh
+        mode: 0555
+
+
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+   
+secrets:
+  neutron_init:
+    file: ./init.sh
+  neutron_conf:
+    file: ./etc/neutron/neutron.conf
+  neutron_plugins_ml2_ml2_conf:
+    file: ./etc/neutron/plugins/ml2/ml2_conf.ini
+
+networks:
+  mgmt:
+    external:
+      name: mgmt

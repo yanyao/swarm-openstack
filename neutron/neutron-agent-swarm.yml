@@ -1,0 +1,62 @@
+version: "3.3"
+
+services:
+  neutron-agent:
+    image: neutron:ubuntu
+    networks:
+      - mgmt
+      - vxlan
+      - vlan
+    command: [ "agent" ]
+
+    privileged: true
+
+    secrets:
+      - source: neutron_conf
+        target: /etc/neutron/neutron.conf
+#      - source: neutron_plugins_ml2_ml2_conf
+#        target: /etc/neutron/plugins/ml2/ml2_conf.ini
+#      - source: neutron_plugins_ml2_linuxbridge_agent
+#        target: /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+      - source: neutron_init
+        target: /init.sh
+        mode: 0555
+
+
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+   
+secrets:
+  neutron_init:
+    file: ./agent-init.sh
+  neutron_conf:
+    file: ./etc/neutron/neutron.conf
+#  neutron_plugins_ml2_ml2_conf:
+#    file: ./etc/neutron/plugins/ml2/ml2_conf.ini
+#  neutron_plugins_ml2_linuxbridge_agent:
+#    file ./etc/neutron/plugins/ml2/linuxbridge_agent.ini
+
+networks:
+  mgmt:
+    external:
+      name: mgmt
+  vxlan:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: "br-vxlan"
+    ipam:
+      driver: default
+      config:
+       - subnet: 172.29.240.0/22
+    internal: true
+  vlan:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: "br-vlan"
+    ipam:
+      driver: default
+      config:
+       - subnet: 172.29.248.0/22
+    internal: true

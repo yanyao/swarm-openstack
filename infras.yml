@@ -1,0 +1,62 @@
+version: "3.3"
+
+services:
+  mariadb:
+    image: mariadb
+    ports:
+      - 3306:3306
+    networks:
+      - mgmt
+    environment:
+      - MYSQL_ROOT_PASSWORD=passw0rd
+    volumes:
+      - mariadb_vol:/var/lib/mysql
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+
+  memcached:
+    image: memcached
+    ports: 
+      - 11211:11211
+    networks:
+      - mgmt
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - 5671:5672
+    volumes:
+      - rabbitmq_vol:/var/lib/rabbitmq
+    networks:
+      - mgmt
+    environment:
+      - RABBITMQ_NODENAME=node@rabbitmq
+    secrets:
+      - source: rabbitmq_init
+        target: /rabbitmq_init.sh
+
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+
+secrets:
+  rabbitmq_init:
+    file: ./rabbitmq_init.sh
+
+volumes:
+  rabbitmq_vol:
+    external: true
+  mariadb_vol:
+    external: true
+
+networks:
+  mgmt:
+    external: true

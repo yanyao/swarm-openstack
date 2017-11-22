@@ -54,3 +54,18 @@ openstack service create --name neutron  --description "Networking" network
 openstack endpoint create --region RegionOne  network public "http://${public_ip}:9696"
 openstack endpoint create --region RegionOne  network internal "http://neutron-server:9696"
 openstack endpoint create --region RegionOne  network admin "http://neutron-server:9696"
+
+
+openstack user create --domain default --password passw0rd nova
+openstack role add --project service --user nova admin
+openstack service create --name nova  --description "Compute" compute
+openstack endpoint create --region RegionOne  compute public "http://${public_ip}:8774/v2.1"
+openstack endpoint create --region RegionOne  compute internal "http://nova-api-os-compute:8774/v2.1"
+openstack endpoint create --region RegionOne  compute admin "http://nova-api-os-compute:8774/v2.1"
+
+openstack user create --domain default --password passw0rd placement
+openstack role add --project service --user placement admin
+openstack service create --name placement  --description "placement" placement
+openstack endpoint create --region RegionOne  placement public "http://${public_ip}:8778"
+openstack endpoint create --region RegionOne  placement internal "http://nova-api-os-compute:8778"
+openstack endpoint create --region RegionOne  placement admin "http://nova-api-os-compute:8778"

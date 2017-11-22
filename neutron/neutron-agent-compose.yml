@@ -1,39 +1,54 @@
-version: "3.3"
+version: "3.4"
 
 services:
   neutron-linuxbridge-agent:
-    image: neutron:ubuntu
+    image: yanyao/neutron:master
     command: [ "linuxbridge-agent" ]
+    pid: "host"
     privileged: true
     network_mode: host
     restart: always
 
   neutron-dhcp-agent:
-    image: neutron:ubuntu
+    image: yanyao/neutron:master
     command: [ "dhcp-agent" ]
+    pid: "host"
+    depends_on:
+      - neutron-metadata-agent
+    volumes:
+      - /var/lib/neutron/:/var/lib/neutron/
     privileged: true
     network_mode: host
     restart: always
    
   neutron-l3-agent:
-    image: neutron:ubuntu
+    image: yanyao/neutron:master
     command: [ "l3-agent" ]
+    pid: "host"
+    depends_on:
+      - neutron-metadata-agent
+    volumes:
+      - /var/lib/neutron/:/var/lib/neutron/
     privileged: true
     network_mode: host
     restart: always
    
   neutron-metadata-agent:
-    image: neutron:ubuntu
+    image: yanyao/neutron:master
     command: [ "metadata-agent" ]
+    pid: "host"
     privileged: true
-    network_mode: host
+    volumes:
+      - /var/lib/neutron/:/var/lib/neutron/
+    network_mode: "host"
     restart: always
 
   neutron-metering-agent:
-    image: neutron:ubuntu
+    image: yanyao/neutron:master
     command: [ "metering-agent" ]
+    pid: "host"
     privileged: true
-    network_mode: host
+    network_mode: "host"
     restart: always
 
 

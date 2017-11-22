@@ -1,0 +1,121 @@
+version: "3.3"
+
+services:
+  nova-api-os-compute:
+    image: nova:ubuntu
+    ports:
+      - 8774:8774
+    networks:
+      - mgmt
+    command: [ "api-os-compute" ]
+    environment:
+      INIT_DB: "true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8774/"]
+      interval: 1m 
+      timeout: 10s
+      retries: 3
+    #secrets:
+    #  - source: neutron_init
+    #    target: /init.sh
+    #    mode: 0555
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+   
+  nova-api-metadata:
+    image: nova:ubuntu
+    ports:
+      - 8775:8775
+    networks:
+      - mgmt
+    command: [ "api-metadata" ]
+    environment:
+      INIT_DB: "false"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8775/"]
+      interval: 1m 
+      timeout: 10s
+      retries: 3
+    ##secrets:
+    #  - source: neutron_init
+    #    target: /init.sh
+    #    mode: 0555
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+
+  nova-placement:
+    image: nova:ubuntu
+    ports:
+      - 8780:8780
+    networks:
+      - mgmt
+    command: [ "placement" ]
+    environment:
+      INIT_DB: "false"
+    #healthcheck:
+    #  test: ["CMD", "curl", "-f", "http://localhost:8780/"]
+    #  interval: 1m 
+    #  timeout: 10s
+    #  retries: 3
+    ##secrets:
+    #  - source: neutron_init
+    #    target: /init.sh
+    #    mode: 0555
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+  nova-scheduler:
+    image: nova:ubuntu
+    networks:
+      - mgmt
+    command: [ "scheduler" ]
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+
+  nova-consoleauth:
+    image: nova:ubuntu
+    networks:
+      - mgmt
+    command: [ "consoleauth" ]
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+
+  nova-conductor:
+    image: nova:ubuntu
+    networks:
+      - mgmt
+    command: [ "conductor" ]
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+
+  nova-spicehtml5proxy:
+    image: nova:ubuntu
+    ports:
+      - 6082:6082
+    networks:
+      - mgmt
+    command: [ "spicehtml5proxy" ]
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+
+secrets:
+  neutron_init:
+    file: ./init.sh
+
+networks:
+  mgmt:
+    external:
+      name: mgmt

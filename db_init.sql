@@ -22,3 +22,32 @@ GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' \
   IDENTIFIED BY 'passw0rd';
 GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' \
 IDENTIFIED BY 'passw0rd';
+
+
+CREATE DATABASE  IF NOT EXISTS nova_api;
+GRANT ALL PRIVILEGES ON nova_api.* TO 'nova_api'@'localhost' \
+  IDENTIFIED BY 'passw0rd';
+GRANT ALL PRIVILEGES ON nova_api.* TO 'nova_api'@'%' \
+IDENTIFIED BY 'passw0rd';
+GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' \
+  IDENTIFIED BY 'passw0rd';
+GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'%' \
+IDENTIFIED BY 'passw0rd';
+
+CREATE DATABASE  IF NOT EXISTS nova;
+GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' \
+  IDENTIFIED BY 'passw0rd';
+GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' \
+IDENTIFIED BY 'passw0rd';
+
+CREATE DATABASE  IF NOT EXISTS nova_cell0;
+GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' \
+  IDENTIFIED BY 'passw0rd';
+GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' \
+IDENTIFIED BY 'passw0rd';
+
+CREATE DATABASE  IF NOT EXISTS nova_placement;
+GRANT ALL PRIVILEGES ON nova_placement.* TO 'nova_placement'@'localhost' \
+  IDENTIFIED BY 'passw0rd';
+GRANT ALL PRIVILEGES ON nova_placement.* TO 'nova_placement'@'%' \
+IDENTIFIED BY 'passw0rd';

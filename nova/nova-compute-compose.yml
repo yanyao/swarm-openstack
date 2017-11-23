@@ -1,0 +1,26 @@
+version: "3.3"
+
+services:
+  neutron-linuxbridge-agent: 
+    image: neutron:ubuntu
+    network_mode: "host"
+    command: [ "linuxbridge-agent" ]
+    privileged: true
+    environment:
+      INT_MAPPING: "vlan:br-vlan"
+      VXLAN_INT: "br-vxlan"
+   
+  nova-compute:
+    image: nova:ubuntu
+    network_mode: "host"
+    command: [ "compute" ]
+    privileged: true
+    environment:
+      INIT_DB: "false"
+      SPICE_HTML5PROXY_BASE_URL: "http://192.168.104.118:6082/spice_auto.html"
+      SPICE_LISTEN: "172.29.236.100"
+      SPICE_SERVER_PROXYCLIENT_ADDRESS: "172.29.236.100"
+    volumes:
+      - ./ceph:/etc/ceph
+      - /var/run/libvirt:/var/run/libvirt
+      - /var/lib/nova:/var/lib/nova

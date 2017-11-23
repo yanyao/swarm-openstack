@@ -1,7 +1,7 @@
 #!/bin/bash 
 
-VXLAN_IP=172.29.240.14
-NODE_NAME=network-4
+VXLAN_IP=172.29.240.11
+NODE_NAME=network-1
 NEUTRON_IMAGE=yanyao/neutron:master
 RABBITMQ_HOST=172.29.236.100
 
@@ -32,6 +32,7 @@ until pids=$(pidof dockerd)
 do   
     sleep 1
 done
+sleep 15
 
 docker pull ${NEUTRON_IMAGE}
 docker tag ${NEUTRON_IMAGE} neutron:master

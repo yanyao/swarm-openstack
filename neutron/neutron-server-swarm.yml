@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   neutron-server:
-    image: neutron:ubuntu
+    image: yanyao/neutron:master
     ports:
       - 9696:9696
     networks:
@@ -31,13 +31,13 @@ services:
       replicas: 1
       endpoint_mode: vip
    
-secrets:
-  neutron_init:
-    file: ./init.sh
-  neutron_conf:
-    file: ./etc/neutron/neutron.conf
-  neutron_plugins_ml2_ml2_conf:
-    file: ./etc/neutron/plugins/ml2/ml2_conf.ini
+#secrets:
+#  neutron_init:
+#    file: ./init.sh
+#  neutron_conf:
+#    file: ./etc/neutron/neutron.conf
+#  neutron_plugins_ml2_ml2_conf:
+#    file: ./etc/neutron/plugins/ml2/ml2_conf.ini
 
 networks:
   mgmt:

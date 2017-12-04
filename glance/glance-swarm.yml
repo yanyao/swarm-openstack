@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   glance-api:
-    image: glance:ubuntu
+    image: yanyao/glance:master
     ports:
       - 9292:9292
     networks:
@@ -14,7 +14,7 @@ services:
       timeout: 10s
       retries: 3
 
-    secrets:
+    configs:
       - source: glance_api_config
         target: /etc/glance/glance-api.conf
       - source: glance_manage_config
@@ -29,22 +29,7 @@ services:
       replicas: 1
       endpoint_mode: vip
    
-#  keystone_sidestick:
-#    image: pause
-#    volumes:
-#      - uwsgi-keystone:/etc/uwsgi
-#      - etc-keystone:/etc/keystone
-#    command: sleep 3600
-#
-
-
-#volumes:
-#  uwsgi-keystone:
-#    external: true
-#  etc-keystone:
-#    external: true
-
-secrets:
+configs:
   glance_api_config:
     file: ./glance-api.conf
   glance_manage_config:

@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   nova-api-os-compute:
-    image: nova:ubuntu
+    image: yanyao/nova:master
     ports:
       - 8774:8774
     networks:
@@ -25,7 +25,7 @@ services:
       endpoint_mode: vip
    
   nova-api-metadata:
-    image: nova:ubuntu
+    image: yanyao/nova:master
     ports:
       - 8775:8775
     networks:
@@ -48,7 +48,7 @@ services:
       endpoint_mode: vip
 
   nova-placement:
-    image: nova:ubuntu
+    image: yanyao/nova:master
     ports:
       - 8780:8780
     networks:
@@ -70,7 +70,7 @@ services:
       replicas: 1
       endpoint_mode: vip
   nova-scheduler:
-    image: nova:ubuntu
+    image: yanyao/nova:master
     networks:
       - mgmt
     command: [ "scheduler" ]
@@ -80,7 +80,7 @@ services:
       endpoint_mode: vip
 
   nova-consoleauth:
-    image: nova:ubuntu
+    image: yanyao/nova:master
     networks:
       - mgmt
     command: [ "consoleauth" ]
@@ -90,7 +90,7 @@ services:
       endpoint_mode: vip
 
   nova-conductor:
-    image: nova:ubuntu
+    image: yanyao/nova:master
     networks:
       - mgmt
     command: [ "conductor" ]
@@ -100,7 +100,7 @@ services:
       endpoint_mode: vip
 
   nova-spicehtml5proxy:
-    image: nova:ubuntu
+    image: yanyao/nova:master
     ports:
       - 6082:6082
     networks:

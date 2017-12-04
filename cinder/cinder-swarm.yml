@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   cinder-api:
-    image: cinder:ubuntu
+    image: yanyao/cinder:master
     ports:
       - 8776:8776
     networks:

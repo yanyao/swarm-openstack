@@ -51,3 +51,10 @@ GRANT ALL PRIVILEGES ON nova_placement.* TO 'nova_placement'@'localhost' \
   IDENTIFIED BY 'passw0rd';
 GRANT ALL PRIVILEGES ON nova_placement.* TO 'nova_placement'@'%' \
 IDENTIFIED BY 'passw0rd';
+
+
+CREATE DATABASE  IF NOT EXISTS horizon;
+GRANT ALL PRIVILEGES ON horizon.* TO 'horizon'@'localhost' \
+  IDENTIFIED BY 'passw0rd';
+GRANT ALL PRIVILEGES ON horizon.* TO 'horizon'@'%' \
+IDENTIFIED BY 'passw0rd';

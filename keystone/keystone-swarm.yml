@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   keystone:
-    image: keystone:ubuntu
+    image: yanyao/keystone:master
     ports:
       - 5000:5000
       - 35357:35357

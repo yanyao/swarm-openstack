@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   neutron-linuxbridge-agent: 
-    image: neutron:ubuntu
+    image: yanyao/neutron:master
     network_mode: "host"
     command: [ "linuxbridge-agent" ]
     privileged: true
@@ -11,7 +11,7 @@ services:
       VXLAN_INT: "br-vxlan"
    
   nova-compute:
-    image: nova:ubuntu
+    image: yanyao/nova:master
     network_mode: "host"
     command: [ "compute" ]
     privileged: true

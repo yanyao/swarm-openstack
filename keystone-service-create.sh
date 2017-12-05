@@ -21,7 +21,7 @@ set -o nounset                              # Treat unset variables as an error
 public_ip=controller
 source openrc
 #openstack service create --name keystone  --description "OpenStack Identity" keystone
-docker exec -ti `docker ps -f ancestor=keystone:ubuntu -n1 -q` /var/lib/openstack/bin/keystone-manage bootstrap --bootstrap-password passw0rd --bootstrap-public-url http://controller:5000/v3/ --bootstrap-region-id RegionOne
+docker exec -ti `docker ps -f ancestor=yanyao/keystone:master -n1 -q` /var/lib/openstack/bin/keystone-manage bootstrap --bootstrap-password passw0rd --bootstrap-public-url http://controller:5000/v3/ --bootstrap-region-id RegionOne
 
 openstack project create --domain default  --description "Service Project" service
 openstack user create --domain default --password passw0rd glance
@@ -67,5 +67,5 @@ openstack user create --domain default --password passw0rd placement
 openstack role add --project service --user placement admin
 openstack service create --name placement  --description "placement" placement
 openstack endpoint create --region RegionOne  placement public "http://${public_ip}:8780"
-openstack endpoint create --region RegionOne  placement internal "http://nova-api-os-compute:8780"
-openstack endpoint create --region RegionOne  placement admin "http://nova-api-os-compute:8780"
+openstack endpoint create --region RegionOne  placement internal "http://nova-placement:8780"
+openstack endpoint create --region RegionOne  placement admin "http://nova-placement:8780"
